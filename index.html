@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColorWaste - Waste Management Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="light-theme">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-recycle brand-icon"></i>
+                <span class="brand-text">ColorWaste</span>
+            </div>
+            <div class="nav-links">
+                <a href="#dashboard" class="nav-link active" data-page="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#collections" class="nav-link" data-page="collections">
+                    <i class="fas fa-table"></i>
+                    <span>Collections</span>
+                </a>
+                <a href="#bin-monitoring" class="nav-link" data-page="bin-monitoring">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Bin Monitoring</span>
+                </a>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="page active">
+            <div class="page-header">
+                <h1>Dashboard</h1>
+                <p>Waste collection overview and statistics</p>
+            </div>
+
+            <!-- Date Filter -->
+            <div class="date-filter-card">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="daily">Daily</button>
+                    <button class="filter-tab" data-filter="weekly">Weekly</button>
+                    <button class="filter-tab" data-filter="monthly">Monthly</button>
+                    <button class="filter-tab" data-filter="custom">Custom</button>
+                </div>
+                <div class="custom-date-inputs" id="customDateInputs" style="display: none;">
+                    <div class="date-input-group">
+                        <label>Start Date:</label>
+                        <input type="date" id="startDate" class="date-input">
+                    </div>
+                    <div class="date-input-group">
+                        <label>End Date:</label>
+                        <input type="date" id="endDate" class="date-input">
+                    </div>
+                    <button class="apply-btn" id="applyCustomDate">Apply</button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Total Items</div>
+                        <div class="stat-value" id="totalItems">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon recyclable">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Recyclable Items</div>
+                        <div class="stat-value" id="recyclableItems">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon residual">
+                        <i class="fas fa-trash"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Residual Items</div>
+                        <div class="stat-value" id="residualItems">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>Waste Distribution</h3>
+                    <canvas id="distributionChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>Weekly Trend</h3>
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Collections Summary -->
+            <div class="summary-card">
+                <h3>Recent Collections Summary</h3>
+                <div class="summary-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Total Items</th>
+                                <th>Recyclable</th>
+                                <th>Residual</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summaryTableBody">
+                            <!-- Data populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Collections Page -->
+        <div id="collections-page" class="page">
+            <div class="page-header">
+                <h1>Waste Collections</h1>
+                <p>Individual waste item records tracked by the system</p>
+            </div>
+
+            <!-- Date Filter -->
+            <div class="date-filter-card">
+                <div class="filter-tabs">
+                    <button class="filter-tab collections-filter active" data-filter="daily">Daily</button>
+                    <button class="filter-tab collections-filter" data-filter="weekly">Weekly</button>
+                    <button class="filter-tab collections-filter" data-filter="monthly">Monthly</button>
+                    <button class="filter-tab collections-filter" data-filter="custom">Custom</button>
+                </div>
+                <div class="custom-date-inputs" id="collectionsCustomDateInputs" style="display: none;">
+                    <div class="date-input-group">
+                        <label>Start Date:</label>
+                        <input type="date" id="collectionsStartDate" class="date-input">
+                    </div>
+                    <div class="date-input-group">
+                        <label>End Date:</label>
+                        <input type="date" id="collectionsEndDate" class="date-input">
+                    </div>
+                    <button class="apply-btn" id="collectionsApplyCustomDate">Apply</button>
+                </div>
+            </div>
+
+            <!-- Stats Cards for Collections -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Total Items</div>
+                        <div class="stat-value" id="collectionsTotal">0</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon recyclable">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Recyclable</div>
+                        <div class="stat-value" id="collectionsRecyclable">0</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon residual">
+                        <i class="fas fa-trash"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Residual</div>
+                        <div class="stat-value" id="collectionsResidual">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Collections Table -->
+            <div class="collections-table-card">
+                <h3>Waste Item Records</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Individual waste items collected in the room</p>
+                
+                <!-- Search and Filter Bar -->
+                <div class="search-filter-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="collectionsSearch" class="search-input" placeholder="Search by ID, type, or category...">
+                    </div>
+                    <div class="category-filter">
+                        <select id="categoryFilter" class="category-select">
+                            <option value="all">All Categories</option>
+                            <option value="recyclable">Recyclable</option>
+                            <option value="residual">Residual</option>
+                        </select>
+                        <i class="fas fa-chevron-down select-arrow"></i>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date/Period</th>
+                                <th>Total Items</th>
+                                <th>Recyclable</th>
+                                <th>Paper</th>
+                                <th>Plastic</th>
+                                <th>Carton</th>
+                                <th>Residual</th>
+                                <th>Paper</th>
+                                <th>Plastic</th>
+                                <th>Carton</th>
+                            </tr>
+                        </thead>
+                        <tbody id="collectionsTableBody">
+                            <!-- Data populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="collectionsPagination">
+                    <!-- Pagination populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Bin Monitoring Page -->
+        <div id="bin-monitoring-page" class="page">
+            <div class="page-header">
+                <h1>Bin Monitoring</h1>
+                <p>Real-time compartment status and management</p>
+            </div>
+
+            <div class="monitoring-controls">
+                <button class="reset-btn" id="resetAllCompartments">
+                    <i class="fas fa-sync-alt"></i>
+                    Reset All Compartments
+                </button>
+            </div>
+
+            <div class="compartments-grid" id="compartmentsGrid">
+                <!-- Compartments populated by JS -->
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
